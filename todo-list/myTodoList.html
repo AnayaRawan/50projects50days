@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do list</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 8px;
+        }
+
+        .form {
+            width: 100%;
+            background-color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .addBtn {
+            color: beige;
+            background-color: #28a745;
+            background-color: cadetblue;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .addBtn:hover {
+            cursor: pointer;
+        }
+
+        .newTask {
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 75%;
+            outline: none;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            padding: 10px;
+            background: #f9f9f9;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li.completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        #count {
+            text-align: center;
+            color: cadetblue;
+            color: #4a5759;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form">
+        <h2>My To-Do List</h2>
+        <input type="text" name="task" id="newTask" class="newTask" placeholder="Add your new task" autocomplete="off">
+        <button id="addBtn" onclick="addTask()" class="addBtn">Add</button>
+        <ul id="taskList"></ul>
+        <h4 id="count"></h4>
+    </div>
+</body>
+
+<script>
+
+    let totalTasks = 0, completedTasks = 0;
+    function addTask() {
+        const newTask = document.getElementById('newTask');
+        const taskText = newTask.value.trim();
+        // const taskSpan = document.createElement('span');
+        // taskSpan.textContent = taskText;
+        if (taskText == "") {
+            return;
+        }
+        totalTasks++;
+
+        const li = document.createElement('li');
+        li.textContent = taskText;
+
+        li.addEventListener('click', () => {
+            // li.classList.toggle('completed');
+            li.className = li.className === 'completed' ? 'no' : 'completed';
+            console.log(li.className, "======");
+            if (li.className === 'completed') {
+                completedTasks++;
+            }
+            else {
+                completedTasks--;
+            }
+            updateCount(completedTasks, totalTasks);
+        })
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = "✕";
+        deleteBtn.onclick = () => {
+            event.stopPropagation();   // الهدف من هاي الفنكشن تمنع الحدث اون كليك انه ينتقل للأبناء 
+            if (li.className === 'completed')
+                completedTasks--;
+            totalTasks--;
+
+            li.remove();
+            deleteBtn.remove();
+            updateCount(completedTasks, totalTasks);
+        }
+
+        // li.appendChild(taskSpan); 
+        li.appendChild(deleteBtn);
+        document.getElementById('taskList').appendChild(li);
+
+        newTask.value = "";
+        updateCount(completedTasks, totalTasks);
+    }
+
+    document.getElementById('newTask').addEventListener('keydown', (btn) => {
+        if (btn.key === "Enter") { addTask(); }
+    });
+
+    function updateCount(completedTasks, totalTasks) {
+        document.getElementById('count').textContent = completedTasks + " / " + totalTasks;
+    }
+
+
+</script>
+
+</html>
